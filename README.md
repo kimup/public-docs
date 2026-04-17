@@ -5,6 +5,7 @@
 ## Contents
 
 - [Notion Management](./notion/README.md): Notionで公開ドキュメントを管理するためのルール、テンプレート、チェックリスト
+- [X Content Workflow](./x-content/README.md): X向けの記事、ポスト、スレッドをCodexで作成するための運用ルール
 
 ## Policy
 
