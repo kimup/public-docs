@@ -49,3 +49,7 @@ x-content/
 | Release Note | 更新内容の告知 |
 | Tip | 小さな知見や手順 |
 | Question | 読者に問いかける投稿 |
+
+## Posting Guide
+
+- [How to Post to X](./posting-guide.md): 手動投稿、Codex補助、X API自動投稿の具体手順

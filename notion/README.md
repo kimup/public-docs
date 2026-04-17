@@ -36,3 +36,7 @@ notion/
     public-doc-template.md
     notion-page-template.md
 ```
+
+## Posting Guide
+
+- [How to Post to Notion](./posting-guide.md): 手動登録、Codex補助、Notion API自動登録の具体手順

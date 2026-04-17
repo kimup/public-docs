@@ -12,3 +12,8 @@
 - 公開してよい情報だけを保存します。
 - APIキー、パスワード、秘密鍵、個人情報、顧客情報は保存しません。
 - 非公開ドキュメントは private repository で管理します。
+
+## Posting Guides
+
+- [How to Post to Notion](./notion/posting-guide.md)
+- [How to Post to X](./x-content/posting-guide.md)
