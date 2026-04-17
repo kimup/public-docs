@@ -1,55 +1,59 @@
 # X Content Workflow
 
-X向けの記事、ポスト、スレッドをCodexで作成するための公開用ワークフローです。
+X向けの投稿アイデア、下書き、レビュー、投稿履歴をCodexとNotionで管理するための公開用ワークフローです。
 
-## 目的
+## Goals
 
-- 投稿案を継続的に作れるようにする
-- NotionやGitHub上の公開ドキュメントを投稿ネタに変換する
-- 投稿前レビューの観点を統一する
+- 投稿アイデアを継続的に蓄積する
+- 投稿前本文と投稿後履歴を分けて管理する
+- 人間のレビューなしに投稿しない
+- API投稿する場合も、Review OKとdry-runを必須にする
 - 公開してはいけない情報を投稿に含めない
 
-## 基本方針
+## Recommended Notion Databases
 
-- 投稿の元ネタは公開してよい情報だけにする
-- GitHubにはテンプレートと運用ルールを置く
-- Notionには投稿候補、ステータス、投稿日、URLを管理する
-- Codexは初稿作成、言い換え、スレッド化、公開前チェックに使う
-- 投稿の最終判断は人間が行う
-
-## 推奨フロー
-
-1. 公開ドキュメントやメモから投稿テーマを選ぶ
-2. CodexでX向けの投稿案を作る
-3. 投稿前チェックリストで内容を確認する
-4. Notionの投稿管理データベースに登録する
-5. 投稿後にURL、反応、学びを記録する
-
-## ファイル構成
+X投稿は1つの巨大DBではなく、3つに分けて管理します。
 
 ```text
-x-content/
-  README.md
-  notion-database-schema.md
-  publishing-checklist.md
-  codex-prompts.md
-  templates/
-    single-post-template.md
-    thread-template.md
-    article-to-post-template.md
+X Ideas        # 投稿前アイデア
+X Drafts       # 投稿前本文、レビュー状態
+X Post History # 投稿済みURL、結果、学び
 ```
 
-## 投稿タイプ
+同じ投稿に関係する行は、共通の `Content ID` で結びつけます。
 
-| Type | Description |
-|---|---|
-| Single Post | 1投稿で完結する短文 |
-| Thread | 複数ポストで説明する連投 |
-| Article Summary | 記事やドキュメントの要約投稿 |
-| Release Note | 更新内容の告知 |
-| Tip | 小さな知見や手順 |
-| Question | 読者に問いかける投稿 |
+例:
 
-## Posting Guide
+```text
+X-YYYYMMDD-001
+```
 
-- [How to Post to X](./posting-guide.md): 手動投稿、Codex補助、X API自動投稿の具体手順
+## Basic Flow
+
+1. アイデアを `X Ideas` に登録する
+2. 投稿本文を作り、`X Drafts` に同じ `Content ID` で登録する
+3. 投稿本文に `Ready To Post` セクションを用意する
+4. 人間が確認し、`Review OK` をチェックする
+5. CLIや手動でdry-run相当の確認をする
+6. 問題なければXへ投稿する
+7. 投稿後、`X Post History` にURLと結果を記録する
+
+## Documents
+
+- [Posting Guide](./posting-guide.md): 手動投稿、Codex補助、X API投稿の流れ
+- [Notion Database Schema](./notion-database-schema.md): 3DB構成の推奨schema
+- [Publishing Checklist](./publishing-checklist.md): 投稿前チェック
+- [Codex Prompts](./codex-prompts.md): 投稿案作成・レビュー用プロンプト
+
+## Templates
+
+- [Single Post Template](./templates/single-post-template.md)
+- [Thread Template](./templates/thread-template.md)
+- [Article to Post Template](./templates/article-to-post-template.md)
+
+## Safety
+
+- `Review OK` がない投稿は公開しない
+- tokenやsecretはGitHubに置かない
+- 未公開情報、個人情報、顧客情報を投稿に含めない
+- API投稿前に必ず本文を確認する

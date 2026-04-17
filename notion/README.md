@@ -1,42 +1,61 @@
 # Notion Management
 
-このディレクトリは、公開用ドキュメントをNotionで管理するためのルール、テンプレート、データベース設計をまとめます。
+Notionでドキュメント、メモ、作業ログ、投稿管理を行うための公開用ルールです。
 
-## 目的
+## Purpose
 
-- GitHub上の公開ドキュメントをNotionから探しやすくする
-- 公開してよい情報だけを扱う
-- 公開前レビューの観点を統一する
-- Codexでドキュメントを作成・更新しやすくする
+- 非公開の作業ハブを整理する
+- メモ、下書き、作業ログ、投稿管理を混ぜない
+- 公開できるドキュメントだけGitHubへ出す
+- CodexがNotionを更新するときの置き場所を明確にする
 
-## 基本方針
+## Recommended Hub Structure
 
-- GitHubを公開ドキュメントの正本にする
-- Notionは目次、ステータス管理、検索用ポータルとして使う
-- APIキー、パスワード、秘密鍵、個人情報、顧客情報は記載しない
-- 内部用ドキュメントは private repository または private Notion に分ける
+```text
+Codex Hub
+  メモ
+    X API Billing Credits
+    X投稿ができるまで
+  Codex作業ログ
+    作業ログDB
+  X Ideas
+  X Drafts
+  X Post History
+  Drafts
+  Private Docs
+  Ideas
+```
 
-## 推奨フロー
+詳しくは [Codex Hub Structure](./codex-hub-structure.md) を参照。
 
-1. `docs/` または公開用MarkdownをGitHubで作成する
-2. 公開前チェックリストで内容を確認する
-3. NotionのDocs Databaseにページを登録する
-4. `GitHub URL` と `Source Path` をNotionに記録する
-5. 定期的に `Last Reviewed` を更新する
+## Basic Policy
 
-## ファイル構成
+- Notionは非公開の作業ハブとして使う
+- GitHub public repositoryには公開してよいルールとテンプレートだけ置く
+- token、secret、`.env` の中身はNotionにもGitHubにも書かない
+- 単発メモは `メモ` 配下に集約する
+- 作業履歴は `Codex作業ログ / 作業ログDB` に記録する
+- X投稿は `X Ideas`、`X Drafts`、`X Post History` の3つで管理する
+
+## Documents
+
+- [Codex Hub Structure](./codex-hub-structure.md): Notion内の推奨ページ構成
+- [Database Schema](./database-schema.md): 公開ドキュメント管理用DBの例
+- [Posting Guide](./posting-guide.md): Notionへの登録方法
+- [Publishing Checklist](./publishing-checklist.md): 公開前チェック
+- [Codex Prompts](./codex-prompts.md): Codexに依頼する時のプロンプト
+
+## File Structure
 
 ```text
 notion/
   README.md
+  codex-hub-structure.md
   database-schema.md
+  posting-guide.md
   publishing-checklist.md
   codex-prompts.md
   templates/
     public-doc-template.md
     notion-page-template.md
 ```
-
-## Posting Guide
-
-- [How to Post to Notion](./posting-guide.md): 手動登録、Codex補助、Notion API自動登録の具体手順

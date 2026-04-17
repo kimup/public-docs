@@ -1,6 +1,6 @@
 # How to Post to X
 
-Xへ投稿する方法を、手動、半自動、API自動化の3段階で整理します。
+Xへ投稿する方法を、手動、Codex補助、API自動化の3段階で整理します。
 
 ## 1. 手動で投稿する
 
@@ -8,13 +8,13 @@ Xへ投稿する方法を、手動、半自動、API自動化の3段階で整理
 
 ### 手順
 
-1. `x-content/templates/` のテンプレートを使って投稿案を作る
-2. `x-content/publishing-checklist.md` で公開前チェックをする
-3. Notionの `X Content Pipeline` に登録する
-4. `Status` を `Review` にする
-5. 問題なければ `Scheduled` または `Published` にする
+1. `X Ideas` に投稿アイデアを登録する
+2. `X Drafts` に投稿本文を作る
+3. 投稿本文に `Ready To Post` セクションを用意する
+4. [Publishing Checklist](./publishing-checklist.md) で確認する
+5. Notionの `Review OK` をチェックする
 6. Xの投稿画面に本文を貼り付けて投稿する
-7. 投稿後、Notionに `X URL` を記録する
+7. 投稿後、`X Post History` にX URLを記録する
 
 ## 2. Codexで投稿本文を作る
 
@@ -29,26 +29,35 @@ Codexに投稿案を作らせ、投稿自体は人間が行います。
 - 1つの主張に絞る
 - 外部公開してよい情報だけ使う
 - 冒頭で読者の関心を作る
+- 280文字以内にする
 - 誇張しない
-- 投稿前チェック項目も最後に出す
+- 最後に投稿前チェック項目も出す
 
 メモ:
 ...
 ```
 
-### スレッドのプロンプト
+### アイデア肉付けのプロンプト
 
 ```text
-以下の内容をXのスレッドにしてください。
+以下の粗いアイデアを、X Ideasに登録できる形へ肉付けしてください。
+
+出力:
+- Name
+- Content ID案
+- Category
+- Target Reader
+- Angle
+- Priority
+- Tags
+- Notes
 
 条件:
-- 5から8投稿
-- 1投稿目はテーマと読む価値を明確にする
-- 各投稿は1メッセージに絞る
-- 内部情報、秘密情報、個人情報は含めない
-- 最後に関連リンクか次の行動を入れる
+- まだ投稿本文にしすぎない
+- 読者と切り口が分かるようにする
+- 公開してよい情報だけ使う
 
-内容:
+アイデア:
 ...
 ```
 
@@ -60,11 +69,20 @@ X APIを使うと、プログラムから投稿を作成できます。
 
 - X Developer Account
 - 承認済みのApp
-- User Access Token
-- 投稿に必要な権限
-- API利用料金や制限の確認
+- OAuth 2.0 User Context token
+- 投稿に必要なscope
+- API利用料金やcreditsの確認
 
-X APIは投稿作成に `POST /2/tweets` を使います。公式ドキュメントでは、認証済みユーザーとして投稿を作成・削除できるManage Posts系エンドポイントとして説明されています。
+必要scopeの例:
+
+```text
+tweet.read
+tweet.write
+users.read
+offline.access
+```
+
+`offline.access` はrefresh tokenで継続運用する場合に使います。
 
 ## API投稿の最小例
 
@@ -88,49 +106,45 @@ curl -X POST 'https://api.x.com/2/tweets' \
 }
 ```
 
-## スレッド投稿の考え方
-
-スレッドは、2投稿目以降を直前の投稿への返信として作ります。
+## Safe Automation Flow
 
 ```text
-1. 1投稿目をPOST /2/tweetsで作成
-2. レスポンスの data.id を取得
-3. 2投稿目を reply.in_reply_to_tweet_id に1投稿目のIDを入れて作成
-4. 以降、直前の投稿IDに返信する形で続ける
+X Ideas
+  -> X Drafts
+  -> Review OK
+  -> dry-run
+  -> X API post
+  -> X Post History
 ```
 
-### スレッド2投稿目の例
-
-```bash
-curl -X POST 'https://api.x.com/2/tweets' \
-  -H "Authorization: Bearer $X_USER_ACCESS_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "text": "2つ目の投稿です。",
-    "reply": {
-      "in_reply_to_tweet_id": "FIRST_POST_ID"
-    }
-  }'
-```
-
-## 自動化するときの流れ
-
-```text
-公開ドキュメント or メモ
-  -> Codexで投稿案生成
-  -> NotionのX Content Pipelineへ登録
-  -> Review OKを人間が確認
-  -> X APIで投稿
-  -> 投稿IDとURLをNotionへ記録
-```
-
-## 自動投稿で守るルール
+守るルール:
 
 - `Review OK` が未チェックの投稿は送信しない
-- SecretやTokenはGitHubにcommitしない
-- 投稿直前に公開前チェックを必ず走らせる
-- APIで投稿した本文、投稿ID、投稿URLをNotionに記録する
-- まずは自動投稿ではなく「下書き生成」から始める
+- dry-runで投稿本文を確認する
+- 280文字を超える場合は投稿しない、またはスレッド化する
+- tokenやsecretはGitHubにcommitしない
+- 投稿後はPost ID、URL、Content IDを記録する
+
+## Refresh Token
+
+Access Tokenは期限切れになるため、refresh tokenを使って更新します。
+
+公開ドキュメントには実tokenを書かず、環境変数名だけを記載します。
+
+```text
+X_AUTH_MODE=oauth2
+X_USER_ACCESS_TOKEN=...
+X_REFRESH_TOKEN=...
+X_CLIENT_ID=...
+X_CLIENT_SECRET=...
+X_USERNAME=...
+```
+
+## Billing Credits
+
+X APIで `CreditsDepleted` が出る場合は、X Developer ConsoleのBilling / Creditsを確認します。
+
+公開ドキュメントには個別のaccount IDを含むbilling URLを書かないでください。
 
 ## 投稿URLの形式
 
@@ -140,7 +154,7 @@ curl -X POST 'https://api.x.com/2/tweets' \
 https://x.com/USER_NAME/status/POST_ID
 ```
 
-## 公式リファレンス
+## Official References
 
 - X API Overview: https://docs.x.com/x-api/overview
 - X Manage Posts: https://docs.x.com/x-api/posts/manage-tweets/introduction

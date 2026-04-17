@@ -2,6 +2,65 @@
 
 X向け投稿案をCodexで作るためのプロンプト集です。
 
+## アイデアをX Ideas用に肉付けする
+
+```text
+以下の粗いアイデアを、X Ideasに登録できる形へ肉付けしてください。
+
+出力:
+- Name
+- Content ID案
+- Status
+- Category
+- Target Reader
+- Angle
+- Priority
+- Tags
+- Notes
+
+条件:
+- まだ完成本文にしすぎない
+- 切り口と読者が分かるようにする
+- 公開してよい情報だけ使う
+- 誤解を招く断定を避ける
+
+アイデア:
+...
+```
+
+## X Drafts用の本文を作る
+
+```text
+以下のX Ideasの内容を、X Draftsに登録できる本文へ展開してください。
+
+出力:
+- Name
+- Content ID
+- Status: Draft
+- Type
+- Hook
+- Related Idea
+- Tags
+- Notes
+- Markdown本文
+
+Markdown本文には必ず以下を含めてください:
+- Summary
+- Draft Notes
+- Ready To Post
+- Alternatives
+- Review Checklist
+
+条件:
+- Ready To Postはそのまま投稿できる文面にする
+- 1投稿なら280文字以内にする
+- 公開してよい情報だけ使う
+- 最終投稿判断は人間が行う
+
+Idea:
+...
+```
+
 ## 公開ドキュメントから投稿案を作る
 
 ```text
@@ -27,6 +86,7 @@ X向け投稿案をCodexで作るためのプロンプト集です。
 - 1つの主張に絞る
 - 冒頭で読者の関心を作る
 - 具体例を1つ入れる
+- 280文字以内にする
 - 外部公開してよい内容だけにする
 - 最後に軽い問いかけか次の行動を入れる
 
@@ -60,7 +120,8 @@ X向け投稿案をCodexで作るためのプロンプト集です。
 - 誤解を招く表現がないか
 - 主張が強すぎないか
 - X向けに読みやすいか
-- 改善した方がよい箇所はどこか
+- 280文字以内か
+- Review OKを付けてよい内容か
 
 出力:
 - 投稿可否: OK / NG / 要修正
@@ -68,20 +129,24 @@ X向け投稿案をCodexで作るためのプロンプト集です。
 - 修正版
 ```
 
-## Notion登録用メタデータを作る
+## 投稿後の履歴を作る
 
 ```text
-以下のX投稿案をNotionの X Content Pipeline に登録するため、メタデータを作成してください。
+以下の投稿結果をX Post Historyに登録する形でまとめてください。
 
 出力:
 - Name
+- Content ID
+- Post Date
 - Type
+- X URL
+- Draft URL
 - Status
-- Source URL
-- Source Path
-- Hook
-- Target Reader
+- Result
+- Learnings
+- Next Action
 - Tags
-- Draft
-- Review OK
+
+投稿結果:
+...
 ```
